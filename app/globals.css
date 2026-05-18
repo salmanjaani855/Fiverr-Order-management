@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
+}
+
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -13,14 +20,146 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --background: #0a0a0a;
     --foreground: #ededed;
+    color-scheme: dark;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+/* Remove default scrollbar styling for better dark mode compatibility */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Fiverr-style dashboard shell (reference UI) */
+.fiverr-dashboard {
+  --fd-bg: #0a0b0d;
+  --fd-card: #161b22;
+  --fd-card-hover: #1c2128;
+  --fd-border: #21262d;
+  --fd-muted: #8b949e;
+  --fd-text: #e6edf3;
+  --fd-accent: #2ecc71;
+  --fd-accent-hover: #27ae60;
+  background-color: var(--fd-bg);
+  background-image:
+    linear-gradient(rgba(46, 204, 113, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 204, 113, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--fd-text);
+}
+
+.fiverr-card {
+  background: var(--fd-card);
+  border: 1px solid var(--fd-border);
+  border-radius: 12px;
+}
+
+/* Reference stat boxes — #1a1d23 containers */
+.stat-card-ref {
+  background: #1a1d23;
+  border: 1px solid #252a33;
+  border-radius: 12px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+}
+
+/* Tasks page — professional dark (no green) */
+.tasks-page-shell {
+  --tp-bg: #0c0e12;
+  --tp-card: #15181e;
+  --tp-card-border: #2a2f38;
+  --tp-muted: #9ca3af;
+  --tp-text: #f1f5f9;
+  --tp-accent: #94a3b8;
+  --tp-accent-strong: #cbd5e1;
+  background-color: var(--tp-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(148, 163, 184, 0.08), transparent),
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 100% 100%, 32px 32px, 32px 32px;
+  color: var(--tp-text);
+}
+
+.tasks-card {
+  background: var(--tp-card);
+  border: 1px solid var(--tp-card-border);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.tasks-input {
+  background: #0f1218;
+  border: 1px solid var(--tp-card-border);
+  border-radius: 10px;
+  color: var(--tp-text);
+}
+
+.tasks-input:focus {
+  outline: none;
+  border-color: #64748b;
+  box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.2);
+}
+
+.fiverr-input {
+  background: #0d1117;
+  border: 1px solid var(--fd-border);
+  border-radius: 10px;
+  color: var(--fd-text);
+}
+
+.fiverr-input::placeholder {
+  color: var(--fd-muted);
+}
+
+.fiverr-input:focus {
+  outline: none;
+  border-color: var(--fd-accent);
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.15);
+}
+
+
+
+
+
+.stat{
+  background:rgba(255,255,255,0.03);
+  border:rgba(255,255,255,0.08);
+  backdrop-filter:blur(14px);
+  transition:.3s;
+  border-radius: 20px;
 }
