@@ -3,7 +3,7 @@
 import React from 'react';
 import { useData } from '@/context/DataContext';
 import { useMemo, useState, useEffect } from 'react';
-import { FiEdit, FiPause, FiPlay } from "react-icons/fi";
+import { FiEdit } from "react-icons/fi";
 import { getAccountId, getRemainingTimeMs, getRemainingTime } from '@/lib/order-utils';
 
 const STATUS_COLORS = {
@@ -30,8 +30,6 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
   const [timeRefresh, setTimeRefresh] = useState(0);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<any>({});
-  const [pausingId, setPausingId] = useState<string | null>(null);
-
   useEffect(() => {
     const timer = setInterval(() => setTimeRefresh((prev) => prev + 1), 30000);
     return () => clearInterval(timer);
@@ -64,9 +62,9 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this order?')) {
+    // if (confirm('Are you sure you want to delete this order?')) {
       await deleteOrder(id);
-    }
+    // }
   };
 
   const handleEditRow = (order: any) => {
@@ -74,51 +72,51 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
     setEditValues({
       clientName: order.clientName,
       price: order.price,
-      duration: order.duration,
+      duration: order.isPaused ? '-' : String(order.duration),
       status: order.status,
     });
   };
 
   const handleSaveRow = async () => {
-    if (editingRowId) {
-      await updateOrder(editingRowId, editValues);
-      setEditingRowId(null);
-      setEditValues({});
+    if (!editingRowId) return;
+
+    const order = orders.find((o) => o._id === editingRowId);
+    const timeVal = String(editValues.duration ?? '').trim();
+
+    const payload: Record<string, unknown> = {
+      clientName: editValues.clientName,
+      price: editValues.price,
+      status: editValues.status,
+    };
+
+    if (timeVal === '-') {
+      if (order && !order.isPaused) {
+        const remainingMs = getRemainingTimeMs(order.createdAt, order.duration, false, 0);
+        payload.isPaused = true;
+        payload.pausedTime = remainingMs;
+      }
+    } else {
+      const duration = parseFloat(timeVal);
+      if (!Number.isNaN(duration)) {
+        payload.duration = duration;
+        if (order?.isPaused) {
+          const remainingMs = order.pausedTime || 0;
+          const durationMs = duration * 3600000;
+          payload.isPaused = false;
+          payload.pausedTime = 0;
+          payload.createdAt = new Date(Date.now() - (durationMs - remainingMs)).toISOString();
+        }
+      }
     }
+
+    await updateOrder(editingRowId, payload);
+    setEditingRowId(null);
+    setEditValues({});
   };
 
   const handleCancelEdit = () => {
     setEditingRowId(null);
     setEditValues({});
-  };
-
-  const handlePauseResume = async (order: any) => {
-    setPausingId(order._id);
-    try {
-      if (order.isPaused) {
-        const remainingMs = order.pausedTime || 0;
-        const durationMs = order.duration * 3600000;
-        const newCreatedAt = new Date(Date.now() - (durationMs - remainingMs));
-        await updateOrder(order._id, {
-          isPaused: false,
-          pausedTime: 0,
-          createdAt: newCreatedAt.toISOString(),
-        });
-      } else {
-        const remainingMs = getRemainingTimeMs(
-          order.createdAt,
-          order.duration,
-          Boolean(order.isPaused),
-          order.pausedTime || 0
-        );
-        await updateOrder(order._id, {
-          isPaused: true,
-          pausedTime: remainingMs,
-        });
-      }
-    } finally {
-      setPausingId(null);
-    }
   };
 
   return (
@@ -209,40 +207,28 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                     <td className="px-6 py-4">
                       {isEditing ? (
                         <input
-                          type="number"
+                          type="text"
                           value={editValues.duration}
-                          onChange={(e) => setEditValues({ ...editValues, duration: parseFloat(e.target.value) })}
+                          onChange={(e) => setEditValues({ ...editValues, duration: e.target.value })}
                           className="w-full px-3 py-2 border-2 border-blue-400 dark:border-blue-600 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Hours"
+                          placeholder="Hours or -"
                         />
+                      ) : order.isPaused ? (
+                        <div
+                          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all duration-200 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400`}
+                        >
+                          <span>⏱️</span>-
+                        </div>
                       ) : (
-                        <div className="flex flex-wrap items-center gap-2">
-                          <div
-                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
-                              remaining.isLow
-                                ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 animate-pulse'
-                                : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                            }`}
-                          >
-                            <span>⏱️</span>
-                            {remaining.display}
-                            {remaining.isPaused && (
-                              <span className="text-[10px] font-normal opacity-80">(paused)</span>
-                            )}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handlePauseResume(order)}
-                            disabled={pausingId === order._id}
-                            title={order.isPaused ? 'Resume timer' : 'Pause timer'}
-                            className="text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-                          >
-                            {order.isPaused ? (
-                              <FiPlay className="w-4 h-4" />
-                            ) : (
-                              <FiPause className="w-4 h-4" />
-                            )}
-                          </button>
+                        <div
+                          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
+                            remaining.isLow
+                              ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 animate-pulse'
+                              : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                          }`}
+                        >
+                          <span>⏱️</span>
+                          {remaining.display}
                         </div>
                       )}
                     </td>
