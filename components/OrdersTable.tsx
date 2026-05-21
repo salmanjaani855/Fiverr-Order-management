@@ -3,7 +3,8 @@
 import React from 'react';
 import { useData } from '@/context/DataContext';
 import { useMemo, useState, useEffect } from 'react';
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiPause, FiPlay } from "react-icons/fi";
+import { getAccountId, getRemainingTimeMs, getRemainingTime } from '@/lib/order-utils';
 
 const STATUS_COLORS = {
   'in-progress': { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-600' },
@@ -23,16 +24,16 @@ interface OrdersTableProps {
 
 export function OrdersTable({ onAddOrder }: OrdersTableProps) {
   const { orders, selectedAccountId, selectedStatus, deleteOrder, updateOrder } = useData();
-  const [searchQuery, setSearchQuery] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editDescription, setEditDescription] = useState('');
   const [expandedDescId, setExpandedDescId] = useState<string | null>(null);
   const [timeRefresh, setTimeRefresh] = useState(0);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<any>({});
+  const [pausingId, setPausingId] = useState<string | null>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => setTimeRefresh(prev => prev + 1), 60000);
+    const timer = setInterval(() => setTimeRefresh((prev) => prev + 1), 30000);
     return () => clearInterval(timer);
   }, []);
 
@@ -40,53 +41,22 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
     let filtered = orders;
 
     if (selectedAccountId) {
-      filtered = filtered.filter((o) => o.accountId._id === selectedAccountId);
+      filtered = filtered.filter((o) => getAccountId(o.accountId) === selectedAccountId);
     }
 
     if (selectedStatus) {
       filtered = filtered.filter((o) => o.status === selectedStatus);
     }
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      filtered = filtered.filter((o) => o.clientName.toLowerCase().includes(q));
-    }
+    // Sort by remaining time (shortest first — e.g. 2d before 3d before 4d)
+    filtered = filtered.sort((a, b) => {
+      const aRemaining = getRemainingTimeMs(a.createdAt, a.duration, a.isPaused, a.pausedTime);
+      const bRemaining = getRemainingTimeMs(b.createdAt, b.duration, b.isPaused, b.pausedTime);
+      return aRemaining - bRemaining;
+    });
 
     return filtered;
-  }, [orders, selectedAccountId, selectedStatus, searchQuery, timeRefresh]);
-
-  const getRemainingTime = (createdAt: string, durationHours: number) => {
-    const now = new Date();
-    const created = new Date(createdAt);
-    const deadline = new Date(created.getTime() + durationHours * 60 * 60 * 1000);
-    const remainingMs = deadline.getTime() - now.getTime();
-
-    if (remainingMs <= 0) {
-      const lateMins = Math.floor(Math.abs(remainingMs) / 60000);
-      const lateHours = Math.floor(lateMins / 60);
-      const lateDays = Math.floor(lateHours / 24);
-
-      if (lateDays > 0) {
-        return { display: `${lateDays}d ${lateHours % 24}h late`, isLow: true, isLate: true };
-      }
-      if (lateHours > 0) {
-        return { display: `${lateHours}h ${lateMins % 60}m late`, isLow: true, isLate: true };
-      }
-      return { display: `${lateMins}m late`, isLow: true, isLate: true };
-    }
-
-    const remainingMins = Math.floor(remainingMs / 60000);
-    const remainingHours = Math.floor(remainingMins / 60);
-    const remainingDays = Math.floor(remainingHours / 24);
-
-    if (remainingDays > 0) {
-      return { display: `${remainingDays}d ${remainingHours % 24}h`, isLow: false, isLate: false };
-    }
-    if (remainingHours > 0) {
-      return { display: `${remainingHours}h ${remainingMins % 60}m`, isLow: remainingHours < 12, isLate: false };
-    }
-    return { display: `${remainingMins}m`, isLow: true, isLate: false };
-  };
+  }, [orders, selectedAccountId, selectedStatus, timeRefresh]);
 
   const handleEditDescription = async (id: string, description: string) => {
     await updateOrder(id, { description });
@@ -122,6 +92,35 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
     setEditValues({});
   };
 
+  const handlePauseResume = async (order: any) => {
+    setPausingId(order._id);
+    try {
+      if (order.isPaused) {
+        const remainingMs = order.pausedTime || 0;
+        const durationMs = order.duration * 3600000;
+        const newCreatedAt = new Date(Date.now() - (durationMs - remainingMs));
+        await updateOrder(order._id, {
+          isPaused: false,
+          pausedTime: 0,
+          createdAt: newCreatedAt.toISOString(),
+        });
+      } else {
+        const remainingMs = getRemainingTimeMs(
+          order.createdAt,
+          order.duration,
+          Boolean(order.isPaused),
+          order.pausedTime || 0
+        );
+        await updateOrder(order._id, {
+          isPaused: true,
+          pausedTime: remainingMs,
+        });
+      }
+    } finally {
+      setPausingId(null);
+    }
+  };
+
   return (
     <div className="space-y-4">
 
@@ -154,7 +153,12 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
           <tbody className="divide-y divide-[#21262d]">
             {filteredOrders.map((order) => {
               const colors = STATUS_COLORS[order.status];
-              const remaining = getRemainingTime(order.createdAt, order.duration);
+              const remaining = getRemainingTime(
+                order.createdAt,
+                order.duration,
+                order.isPaused,
+                order.pausedTime
+              );
               const isEditing = editingRowId === order._id;
 
               return (
@@ -212,15 +216,33 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                           placeholder="Hours"
                         />
                       ) : (
-                        <div
-                          className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
-                            remaining.isLow
-                              ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 animate-pulse'
-                              : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                          }`}
-                        >
-                          <span>⏱️</span>
-                          {remaining.display}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
+                              remaining.isLow
+                                ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 animate-pulse'
+                                : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                            }`}
+                          >
+                            <span>⏱️</span>
+                            {remaining.display}
+                            {remaining.isPaused && (
+                              <span className="text-[10px] font-normal opacity-80">(paused)</span>
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handlePauseResume(order)}
+                            disabled={pausingId === order._id}
+                            title={order.isPaused ? 'Resume timer' : 'Pause timer'}
+                            className="text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+                          >
+                            {order.isPaused ? (
+                              <FiPlay className="w-4 h-4" />
+                            ) : (
+                              <FiPause className="w-4 h-4" />
+                            )}
+                          </button>
                         </div>
                       )}
                     </td>

@@ -16,7 +16,9 @@ interface Order {
   status: 'in-progress' | 'revision' | 'delivered';
   description: string;
   createdAt: string;
-  accountId: Account;
+  accountId: Account | string;
+  isPaused?: boolean;
+  pausedTime?: number;
 }
 
 interface TeamMember {
@@ -42,7 +44,7 @@ interface DataContextType {
   refreshTeamMembers: () => Promise<void>;
   addOrder: (order: Omit<Order, '_id' | 'createdAt'>) => Promise<void>;
   deleteOrder: (id: string) => Promise<void>;
-  updateOrder: (id: string, order: Partial<Order>) => Promise<void>;
+  updateOrder: (id: string, order: Record<string, unknown>) => Promise<void>;
   deleteTeamMember: (id: string) => Promise<void>;
   updateTeamMember: (id: string, data: Partial<TeamMember>) => Promise<void>;
 }
@@ -136,7 +138,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const updateOrder = async (id: string, order: Partial<Order>) => {
+  const updateOrder = async (id: string, order: Record<string, unknown>) => {
     const response = await fetch(`/api/orders/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },

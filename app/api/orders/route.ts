@@ -68,7 +68,8 @@ export async function POST(request: NextRequest) {
 
     await order.save();
 
-    return successResponse({ order }, 201);
+    const saved = await Order.findById(order._id).populate('accountId');
+    return successResponse({ order: saved }, 201);
   } catch (error) {
     console.error('POST order error:', error);
     return errorResponse('Internal server error', 500);

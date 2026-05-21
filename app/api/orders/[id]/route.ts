@@ -25,18 +25,22 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const body = await request.json();
-    const { clientName, duration, price, status, description } = body;
+    const { clientName, duration, price, status, description, isPaused, pausedTime, createdAt } = body;
 
     if (clientName !== undefined) order.clientName = clientName;
     if (duration !== undefined) order.duration = duration;
     if (price !== undefined) order.price = price;
     if (status !== undefined) order.status = status;
     if (description !== undefined) order.description = description;
+    if (isPaused !== undefined) order.isPaused = Boolean(isPaused);
+    if (pausedTime !== undefined) order.pausedTime = Number(pausedTime) || 0;
+    if (createdAt !== undefined) order.createdAt = new Date(createdAt);
 
     order.updatedAt = new Date();
     await order.save();
 
-    return successResponse({ order });
+    const updated = await Order.findById(order._id).populate('accountId');
+    return successResponse({ order: updated });
   } catch (error) {
     console.error('PUT order error:', error);
     return errorResponse('Internal server error', 500);

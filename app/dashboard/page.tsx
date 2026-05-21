@@ -77,7 +77,7 @@ export default function DashboardPage() {
               </div>
 
               <StatsBoxes />
-              <OrdersTable />
+              <OrdersTable onAddOrder={() => setModalOpen(true)} />
             </div>
           </div>
 

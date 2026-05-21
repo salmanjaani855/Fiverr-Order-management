@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -132,13 +134,21 @@ export default function LoginPage() {
 
             <div className="relative group">
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 required
-                className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 pl-5 pr-4 text-white placeholder:text-gray-500 outline-none transition-all duration-300 focus:border-green-400 focus:bg-white/10 focus:ring-4 focus:ring-green-500/10"
+                className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 pl-5 pr-12 text-white placeholder:text-gray-500 outline-none transition-all duration-300 focus:border-green-400 focus:bg-white/10 focus:ring-4 focus:ring-green-500/10"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
+              </button>
 
               <div className="absolute inset-0 rounded-2xl border border-green-400/0 group-focus-within:border-green-400/40 pointer-events-none transition-all duration-300"></div>
             </div>

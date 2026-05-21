@@ -3,6 +3,7 @@
 import { useData } from '@/context/DataContext';
 import { useMemo } from 'react';
 import { sortAccounts } from '@/lib/account-order';
+import { getAccountId } from '@/lib/order-utils';
 import { RiDashboardHorizontalFill } from "react-icons/ri";
 import { TbFilterSearch } from "react-icons/tb";
 
@@ -17,7 +18,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const accountStats = useMemo(() => {
     return sortAccounts(accounts).map((account) => ({
       ...account,
-      orderCount: orders.filter((o) => o.accountId._id === account._id).length,
+      orderCount: orders.filter((o) => getAccountId(o.accountId) === account._id).length,
     }));
   }, [accounts, orders]);
 

@@ -117,13 +117,39 @@ export function Navbar() {
         </div>
 
         <div className="md:hidden flex items-center gap-2">
-          <Link
+          {/* <Link
             href="/tasks"
             className="text-xs font-semibold text-gray-700 dark:text-gray-300 px-2.5 py-1.5 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 border border-gray-300/30 dark:border-gray-600/30"
           >
             Tasks
-          </Link>
-          <button
+          </Link> */}
+
+
+          <div className="md:hidden flex items-center gap-2">
+  <Link
+    href="/dashboard"
+    className="text-xs font-semibold text-gray-700 dark:text-gray-300 px-2.5 py-1.5 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 border border-gray-300/30 dark:border-gray-600/30"
+  >
+    Dashboard
+  </Link>
+
+  <Link
+    href="/team"
+    className="text-xs font-semibold text-gray-700 dark:text-gray-300 px-2.5 py-1.5 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 border border-gray-300/30 dark:border-gray-600/30"
+  >
+    Team
+  </Link>
+
+  <Link
+    href="/tasks"
+    className="text-xs font-semibold text-gray-700 dark:text-gray-300 px-2.5 py-1.5 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 border border-gray-300/30 dark:border-gray-600/30"
+  >
+    Tasks
+  </Link>
+
+  {/* Avatar */}
+</div>
+          {/* <button
             onClick={toggleTheme}
             className="p-2 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300/50 dark:hover:bg-gray-600/50 transition-colors duration-200"
           >
@@ -148,7 +174,7 @@ export function Navbar() {
                 />
               </svg>
             )}
-          </button>
+          </button> */}
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
