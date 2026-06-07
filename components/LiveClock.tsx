@@ -23,7 +23,7 @@ export function LiveClock() {
   }, []);
 
   return (
-    <div className="hidden lg:flex items-center px-4 py-2 rounded-lg border border-[#2ecc71]/30 bg-[#0d1117]/80 shadow-[0_0_12px_rgba(46,204,113,0.12)]">
+    <div className="hidden lg:flex items-center px-4 py-2 rounded-lg border border-[#2ecc71]/30 bg-gray-100 dark:bg-[#0d1117]/80 shadow-[0_0_12px_rgba(46,204,113,0.12)]">
       <span className="font-mono text-sm font-semibold text-[#2ecc71] tabular-nums tracking-wide">
         {time || '--:--:--'}
       </span>

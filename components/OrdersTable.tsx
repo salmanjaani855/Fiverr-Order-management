@@ -139,16 +139,16 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
     <div className="fiverr-card overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-[#0d1117] border-b border-[#21262d]">
+          <thead className="bg-gray-100 dark:bg-[#0d1117] border-b border-gray-300 dark:border-[#21262d]">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Client</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Price</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Remaining Time</th>
-              <th className="px-6 py-4 text-right text-xs font-bold text-[#8b949e] uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 dark:text-[#8b949e] uppercase tracking-wider">Client</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 dark:text-[#8b949e] uppercase tracking-wider">Price</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 dark:text-[#8b949e] uppercase tracking-wider">Status</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 dark:text-[#8b949e] uppercase tracking-wider">Remaining Time</th>
+              <th className="px-6 py-4 text-right text-xs font-bold text-gray-600 dark:text-[#8b949e] uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#21262d]">
+          <tbody className="divide-y divide-gray-300 dark:divide-[#21262d]">
             {filteredOrders.map((order) => {
               const colors = STATUS_COLORS[order.status];
               const remaining = getRemainingTime(
@@ -161,7 +161,7 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
 
               return (
                 <React.Fragment key={order._id}>
-                  <tr className={`${isEditing ? 'bg-[#21262d]/50' : 'hover:bg-[#1c2128]'} transition-colors duration-200`}>
+                  <tr className={`${isEditing ? 'bg-blue-50 dark:bg-[#21262d]/50' : 'hover:bg-gray-50 dark:hover:bg-[#1c2128]'} transition-colors duration-200`}>
                     <td className="px-6 py-4 text-sm">
                       {isEditing ? (
                         <input
@@ -171,7 +171,7 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                           className="w-full px-3 py-2 border-2 border-blue-400 dark:border-blue-600 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       ) : (
-                        <span className="text-white font-semibold">{order.clientName}</span>
+                        <span className="text-gray-900 dark:text-white font-semibold">{order.clientName}</span>
                       )}
                     </td>
                     <td className="px-6 py-4 text-sm">
@@ -227,7 +227,7 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                               : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                           }`}
                         >
-                          <span>⏱️</span>
+                          <span>⏱</span>
                           {remaining.display}
                         </div>
                       )}
@@ -253,7 +253,7 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                           {order.description && (
                             <button
                               onClick={() => setExpandedDescId(expandedDescId === order._id ? null : order._id)}
-                              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold transition-colors duration-200 inline-flex items-center gap-1"
+                              className="text-blue-600 dark:text-cyan-500 cursor-pointer hover:text-green-800 dark:hover:text-blue-300 font-semibold transition-colors duration-200 inline-flex items-center gap-1"
                             >
                               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -273,7 +273,7 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                           </button>
                           <button
                             onClick={() => handleDelete(order._id)}
-                            className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-semibold transition-colors duration-200 inline-flex items-center gap-1"
+                            className="text-red-600 dark:text-blue-400 hover:text-red-800 dark:hover:text-red-300 font-semibold transition-colors duration-200 inline-flex items-center gap-1"
                             title="Delete order"
                           >
                             <svg className="w-4 h-4 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">

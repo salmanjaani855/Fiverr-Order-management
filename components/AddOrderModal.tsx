@@ -95,7 +95,7 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
       <div className="fiverr-card max-w-2xl w-full p-8 border-[#2ecc71]/20 shadow-[0_0_40px_rgba(46,204,113,0.08)]">
-        <h2 className="text-2xl font-bold text-white mb-8">Add New Order</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Add New Order</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (

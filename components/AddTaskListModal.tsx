@@ -75,12 +75,12 @@ export function AddTaskListModal({ isOpen, onClose, onCreated }: AddTaskListModa
         className="tasks-card w-full max-w-lg overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-4 flex justify-between items-center border-b border-[#2a2f38] bg-[#0f1218]">
-          <h2 className="text-lg font-bold text-white">New task list</h2>
+        <div className="px-6 py-4 flex justify-between items-center border-b border-gray-300 dark:border-[#2a2f38] bg-gray-50 dark:bg-[#0f1218]">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">New task list</h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+            className="text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white p-1 rounded-lg hover:bg-gray-300/30 dark:hover:bg-white/5 transition-colors"
             aria-label="Close"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,13 +124,13 @@ export function AddTaskListModal({ isOpen, onClose, onCreated }: AddTaskListModa
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wide text-[11px]">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-400 mb-2 uppercase tracking-wide text-[11px]">
               Tasks (up to 6)
             </label>
             <div className="space-y-2">
               {items.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <span className="w-6 h-6 flex-shrink-0 rounded border border-slate-600 flex items-center justify-center text-xs font-bold text-slate-500">
+                  <span className="w-6 h-6 flex-shrink-0 rounded border border-gray-400 dark:border-slate-600 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-slate-500">
                     {index + 1}
                   </span>
                   <input
@@ -149,14 +149,14 @@ export function AddTaskListModal({ isOpen, onClose, onCreated }: AddTaskListModa
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-slate-600 text-slate-300 hover:bg-white/5 transition-colors font-medium"
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-400 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-200/30 dark:hover:bg-white/5 transition-colors font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-slate-600 hover:bg-slate-500 text-white font-semibold disabled:opacity-60 border border-slate-500/40 transition-all"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-slate-700 dark:bg-slate-600 hover:bg-slate-800 dark:hover:bg-slate-500 text-white font-semibold disabled:opacity-60 border border-slate-600 dark:border-slate-500/40 transition-all"
             >
               {loading ? 'Saving...' : 'Create list'}
             </button>

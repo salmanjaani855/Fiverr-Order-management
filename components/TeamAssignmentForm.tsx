@@ -158,7 +158,7 @@ export function TeamAssignmentForm() {
       {/* Desktop Table View */}
       <div className="hidden md:block overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
         <table className="w-full">
-          <thead className="bg-slate-800 dark:bg-slate-900 text-white sticky top-0">
+          <thead className="bg-gray-200 dark:bg-slate-900 text-gray-900 dark:text-white sticky top-0">
             <tr>
               <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold">Client Name</th>
               {TEAM_MEMBERS.map((member) => (

@@ -26,11 +26,11 @@ export function StatsBoxes() {
           Total Orders
         </p>
 
-        <p className="text-4xl font-bold text-white mt-3">
+        <p className="text-4xl font-bold text-gray-900 dark:text-white mt-3">
           {stats.totalOrders}
         </p>
 
-        <div className="mt-4 h-1.5 w-full bg-[#222a35] rounded-full overflow-hidden">
+        <div className="mt-4 h-1.5 w-full bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full w-1/3 bg-[#1dbf73] rounded-full shadow-[0_0_20px_#1dbf73]"></div>
         </div>
       </div>
@@ -40,11 +40,11 @@ export function StatsBoxes() {
           Revisions
         </p>
 
-        <p className="text-4xl font-bold text-white mt-3">
+        <p className="text-4xl font-bold text-gray-900 dark:text-white mt-3">
           {stats.revisions}
         </p>
 
-        <div className="mt-4 h-1.5 w-full bg-[#222a35] rounded-full overflow-hidden">
+        <div className="mt-4 h-1.5 w-full bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full w-1/4 bg-[#1dbf73] rounded-full shadow-[0_0_20px_#1dbf73]"></div>
         </div>
       </div>
@@ -54,11 +54,11 @@ export function StatsBoxes() {
           Total Revenue
         </p>
 
-        <p className="text-4xl font-bold text-white mt-3">
+        <p className="text-4xl font-bold text-gray-900 dark:text-white mt-3">
           ${stats.totalEarnings.toFixed()}
         </p>
 
-        <div className="mt-4 h-1.5 w-full bg-[#222a35] rounded-full overflow-hidden">
+        <div className="mt-4 h-1.5 w-full bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
           <div className="h-full w-2/3 bg-[#1dbf73] rounded-full shadow-[0_0_20px_#1dbf73]"></div>
         </div>
       </div>
