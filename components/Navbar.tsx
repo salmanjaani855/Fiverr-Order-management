@@ -116,9 +116,9 @@ export function Navbar() {
         </div>
 
         <div className="md:hidden flex items-center gap-2">
-<<<<<<< HEAD
+
           {/* <Link
-=======
+
           <Link
             href="/team"
             className="text-xs font-semibold text-gray-700 dark:text-gray-300 px-2.5 py-1.5 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 border border-gray-300/30 dark:border-gray-600/30"
@@ -126,12 +126,12 @@ export function Navbar() {
             Team
           </Link>
           <Link
->>>>>>> 74d4875 (Fixed issues and updated features)
+
             href="/tasks"
             className="text-xs font-semibold text-gray-700 dark:text-gray-300 px-2.5 py-1.5 rounded-lg bg-gray-200/50 dark:bg-gray-700/50 border border-gray-300/30 dark:border-gray-600/30"
           >
             Tasks
-<<<<<<< HEAD
+
           </Link> */}
 
 
@@ -184,10 +184,10 @@ export function Navbar() {
                 />
               </svg>
             )}
-          </button> */}
-=======
-          </Link>
->>>>>>> 74d4875 (Fixed issues and updated features)
+          </button>  */}
+
+          {/* </Link> */}
+
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
