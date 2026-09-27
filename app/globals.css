@@ -1,14 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  color-scheme: light;
-}
-
-html.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --neo-bg: #2c2f33;
+  --neo-highlight: #3b4451;
+  --neo-shadow: #000000;
+  --neo-text: #eeeeee;
+  --neo-muted: #cedbdc;
+  --neo-soft: #c8d3f1;
+  --neo-accent: #1a91fa;
+  --neo-accent-deep: #144884;
+  --neo-card-from: #1d5ba9;
+  --neo-card-to: #0a325a;
+  --neo-radius: 12.446px;
+  --neo-radius-lg: 24.892px;
+  --neo-convex: -5px -5px 15px 0px var(--neo-highlight), 5px 5px 15px 0px var(--neo-shadow);
+  --neo-convex-lg: -6.223px -6.223px 18.669px 0px var(--neo-highlight), 6.223px 6.223px 18.669px 0px var(--neo-shadow);
+  --neo-concave: inset -6.223px -6.223px 6.223px 0px var(--neo-highlight), inset 3.734px 3.734px 6.223px 0px var(--neo-shadow);
+  --neo-card-shadow: 14px 14px 40px 0px rgba(16, 16, 18, 0.75), -7px -7px 30px 0px #262e32;
+  --background: #2c2f33;
+  --foreground: #eeeeee;
   color-scheme: dark;
 }
 
@@ -19,26 +29,21 @@ html.dark {
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    color-scheme: dark;
-  }
-}
-
 html {
   scroll-behavior: smooth;
 }
 
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 300ms ease, color 300ms ease;
+  background: var(--neo-bg);
+  color: var(--neo-text);
 }
 
-/* Remove default scrollbar styling for better dark mode compatibility */
+body {
+  font-family: var(--font-montserrat), var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  min-height: 100%;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -49,117 +54,188 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--neo-highlight);
   border-radius: 4px;
 }
 
-html.dark ::-webkit-scrollbar-thumb {
-  background: #475569;
-}
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #4a5568;
 }
 
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+.neo-app {
+  background: var(--neo-bg);
+  color: var(--neo-text);
 }
 
-/* Fiverr-style dashboard shell (reference UI) */
-.fiverr-dashboard {
-  --fd-bg: #0a0b0d;
-  --fd-card: #161b22;
-  --fd-card-hover: #1c2128;
-  --fd-border: #21262d;
-  --fd-muted: #8b949e;
-  --fd-text: #e6edf3;
-  --fd-accent: #2ecc71;
-  --fd-accent-hover: #27ae60;
-  background-color: var(--fd-bg);
-  background-image:
-    linear-gradient(rgba(46, 204, 113, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(46, 204, 113, 0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
-  color: var(--fd-text);
+.neo-nav {
+  background: var(--neo-bg);
+  border-radius: var(--neo-radius-lg);
+  box-shadow: var(--neo-convex-lg);
 }
 
-.fiverr-card {
-  background: var(--fd-card);
-  border: 1px solid var(--fd-border);
-  border-radius: 12px;
+.neo-logo {
+  background: var(--neo-accent-deep);
+  color: #ebdbdb;
+  border-radius: var(--neo-radius-lg);
+  box-shadow: var(--neo-convex-lg);
 }
 
-/* Reference stat boxes — #1a1d23 containers */
-.stat-card-ref {
-  background: #1a1d23;
-  border: 1px solid #252a33;
-  border-radius: 12px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+.neo-btn {
+  background: var(--neo-bg);
+  color: var(--neo-muted);
+  border-radius: var(--neo-radius);
+  box-shadow: var(--neo-convex-lg);
+  font-weight: 600;
+  transition: color 200ms ease, box-shadow 200ms ease;
 }
 
-/* Tasks page — professional dark (no green) */
-.tasks-page-shell {
-  --tp-bg: #0c0e12;
-  --tp-card: #15181e;
-  --tp-card-border: #2a2f38;
-  --tp-muted: #9ca3af;
-  --tp-text: #f1f5f9;
-  --tp-accent: #94a3b8;
-  --tp-accent-strong: #cbd5e1;
-  background-color: var(--tp-bg);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(148, 163, 184, 0.08), transparent),
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 100% 100%, 32px 32px, 32px 32px;
-  color: var(--tp-text);
+.neo-btn:hover {
+  color: #ffffff;
 }
 
+.neo-btn-active {
+  background: var(--neo-bg);
+  color: var(--neo-accent);
+  border-radius: var(--neo-radius);
+  box-shadow: var(--neo-concave);
+  font-weight: 600;
+}
+
+.neo-btn-pill {
+  background: var(--neo-bg);
+  color: var(--neo-text);
+  border-radius: 124px;
+  box-shadow: var(--neo-convex);
+}
+
+.neo-icon-btn {
+  background: var(--neo-bg);
+  color: var(--neo-muted);
+  border-radius: var(--neo-radius);
+  box-shadow: var(--neo-convex-lg);
+}
+
+.neo-sidebar {
+  background: var(--neo-bg);
+  border-radius: 0 var(--neo-radius-lg) var(--neo-radius-lg) 0;
+  box-shadow: var(--neo-convex-lg);
+}
+
+.neo-surface {
+  background: var(--neo-bg);
+  border-radius: var(--neo-radius-lg);
+  box-shadow: var(--neo-convex-lg);
+}
+
+.neo-card {
+  background-image: linear-gradient(138.69deg, var(--neo-card-from) 0%, var(--neo-card-to) 100%);
+  border-radius: 8px;
+  box-shadow: var(--neo-card-shadow);
+  color: #f2f5f8;
+}
+
+.neo-row {
+  background: var(--neo-bg);
+  border-radius: 40px;
+  box-shadow: var(--neo-convex);
+}
+
+.neo-field {
+  background: var(--neo-bg) !important;
+  color: var(--neo-text) !important;
+  border: none !important;
+  border-radius: var(--neo-radius) !important;
+  box-shadow: var(--neo-concave);
+  outline: none;
+}
+
+.neo-field:focus {
+  box-shadow: var(--neo-concave), 0 0 0 1px var(--neo-accent);
+}
+
+.neo-link {
+  color: var(--neo-accent);
+}
+
+.neo-modal {
+  background: var(--neo-bg);
+  border-radius: var(--neo-radius-lg);
+  box-shadow: var(--neo-convex-lg);
+}
+
+.neo-chip {
+  background: var(--neo-bg);
+  color: var(--neo-muted);
+  border-radius: 124px;
+  box-shadow: var(--neo-convex);
+}
+
+.neo-chip-on {
+  background: var(--neo-bg);
+  color: var(--neo-accent);
+  border-radius: 124px;
+  box-shadow: var(--neo-concave);
+}
+
+.fiverr-dashboard,
+.fiverr-card,
+.tasks-page-shell,
 .tasks-card {
-  background: var(--tp-card);
-  border: 1px solid var(--tp-card-border);
-  border-radius: 14px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  background: var(--neo-bg);
+  color: var(--neo-text);
+  border: none;
+  border-radius: var(--neo-radius-lg);
+  box-shadow: var(--neo-convex-lg);
 }
 
+.fiverr-input,
 .tasks-input {
-  background: #0f1218;
-  border: 1px solid var(--tp-card-border);
-  border-radius: 10px;
-  color: var(--tp-text);
+  background: var(--neo-bg);
+  color: var(--neo-text);
+  border: none;
+  border-radius: var(--neo-radius);
+  box-shadow: var(--neo-concave);
 }
 
+.fiverr-input:focus,
 .tasks-input:focus {
   outline: none;
-  border-color: #64748b;
-  box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.2);
+  box-shadow: var(--neo-concave), 0 0 0 1px var(--neo-accent);
 }
 
-.fiverr-input {
-  background: #0d1117;
-  border: 1px solid var(--fd-border);
-  border-radius: 10px;
-  color: var(--fd-text);
+@keyframes order-row-delete {
+  to {
+    opacity: 0;
+    transform: translateX(16px);
+  }
 }
 
-.fiverr-input::placeholder {
-  color: var(--fd-muted);
+@keyframes order-row-saved {
+  0%, 100% {
+    box-shadow: var(--neo-convex);
+  }
+  35% {
+    box-shadow: inset -6px -6px 6px var(--neo-highlight), inset 4px 4px 6px var(--neo-shadow);
+  }
 }
 
-.fiverr-input:focus {
-  outline: none;
-  border-color: var(--fd-accent);
-  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.15);
+.animate-order-delete {
+  animation: order-row-delete 260ms ease-in forwards;
 }
 
+.animate-order-saved {
+  animation: order-row-saved 900ms ease-out;
+}
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-order-delete,
+  .animate-order-saved {
+    animation-duration: 1ms;
+  }
+}
 
-
-
-.stat{
-  background:rgba(255,255,255,0.03);
-  border:rgba(255,255,255,0.08);
-  backdrop-filter:blur(14px);
-  transition:.3s;
+.stat {
+  background: var(--neo-bg);
+  box-shadow: var(--neo-convex-lg);
   border-radius: 20px;
 }

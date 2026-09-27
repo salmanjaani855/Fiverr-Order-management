@@ -20,18 +20,15 @@ export async function GET(request: NextRequest) {
     }
 
     let accounts = await Account.find({ userId: decoded.userId }).sort({ createdAt: -1 });
+    const defaultAccountNames = ['Ena', 'Lyric Craft', 'Sam', 'Lyric Studio', 'Flux Studio', 'Umer'];
+    const existingNames = new Set(accounts.map((account) => account.name.trim().toLowerCase()));
+    const missingAccounts = defaultAccountNames
+      .filter((name) => !existingNames.has(name.toLowerCase()))
+      .map((name) => ({ userId: decoded.userId, name }));
 
-    // Create default accounts if none exist
-    if (accounts.length === 0) {
-      const defaultAccounts = [
-        { userId: decoded.userId, name: 'Ena' },
-        { userId: decoded.userId, name: 'Lyric Craft' },
-        { userId: decoded.userId, name: 'Sam' },
-        { userId: decoded.userId, name: 'Lyric Studio' },
-      ];
-
-      const created = await Account.insertMany(defaultAccounts);
-      accounts = created;
+    if (missingAccounts.length > 0) {
+      await Account.insertMany(missingAccounts);
+      accounts = await Account.find({ userId: decoded.userId }).sort({ createdAt: -1 });
     }
 
     return successResponse({ accounts: sortAccounts(accounts) });

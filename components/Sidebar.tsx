@@ -43,14 +43,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Sidebar */}
 <div
-  className={`fixed md:static inset-y-0 left-0 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-[100dvh] overflow-y-auto transition-all duration-300 ease-in-out z-40 ${
+  className={`fixed md:static inset-y-0 left-0 w-64 neo-sidebar h-[100dvh] overflow-y-auto transition-all duration-300 ease-in-out z-40 ${
     isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
   }`}
 >
         <div className="p-6 space-y-8">
           {/* Accounts Section */}
           <div>
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-[#eee] mb-4 flex items-center gap-2">
               <span><RiDashboardHorizontalFill /></span> Accounts
             </h2>
             <div className="space-y-2">
@@ -59,15 +59,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   setSelectedAccountId(null);
                   onClose?.();
                 }}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
+                className={`w-full text-left px-4 py-3 ${
                   selectedAccountId === null
-                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-semibold'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    ? 'neo-btn-active'
+                    : 'neo-btn'
                 }`}
               >
                 <div className="flex justify-between items-center">
                   <span>All Accounts</span>
-                  <span className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full font-medium">
+                  <span className="text-xs neo-chip px-2 py-1 font-medium">
                     {orders.length}
                   </span>
                 </div>
@@ -80,15 +80,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     setSelectedAccountId(account._id);
                     onClose?.();
                   }}
-                  className={`w-full cursor-pointer text-left px-4 py-3 rounded-lg transition-all duration-200 ${
+                  className={`w-full cursor-pointer text-left px-4 py-3 ${
                     selectedAccountId === account._id
-                      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-semibold'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'neo-btn-active'
+                      : 'neo-btn'
                   }`}
                 >
                   <div className="flex justify-between items-center">
                     <span className="truncate">{account.name}</span>
-                    <span className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full font-medium">
+                    <span className="text-xs neo-chip px-2 py-1 font-medium">
                       {account.orderCount}
                     </span>
                   </div>
@@ -99,7 +99,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           {/* Filter Section */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-[#eee] mb-4 flex items-center gap-2">
               <span><TbFilterSearch /></span> Filter by Status
             </h3>
             <div className="space-y-2 ">
@@ -108,15 +108,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   setSelectedStatus(null);
                   onClose?.();
                 }}
-                className={`w-full cursor-pointer text-left px-4 py-3 rounded-lg transition-all duration-200 ${
+                className={`w-full cursor-pointer text-left px-4 py-3 ${
                   selectedStatus === null
-                    ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-semibold'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    ? 'neo-btn-active'
+                    : 'neo-btn'
                 }`}
               >
                 <div className="flex justify-between items-center">
                   <span>All</span>
-                  <span className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-full font-medium">
+                  <span className="text-xs neo-chip px-2 py-1 font-medium">
                     {orders.length}
                   </span>
                 </div>
@@ -127,10 +127,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     setSelectedStatus('in-progress');
     onClose?.();
   }}
-  className={`w-full cursor-pointer text-left px-4 py-3 rounded-lg transition-all duration-200 flex justify-between items-center ${
+  className={`w-full cursor-pointer text-left px-4 py-3 flex justify-between items-center ${
     selectedStatus === 'in-progress'
-      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-semibold'
-      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+      ? 'neo-btn-active'
+      : 'neo-btn'
   }`}
 >
   <span className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       viewBox="0 0 24 24"
       strokeWidth={2}
       stroke="currentColor"
-      className="w-5 h-5 text-green-600 dark:text-green-400"
+      className="w-5 h-5 text-[#1a91fa]"
     >
       <path
         strokeLinecap="round"
@@ -153,7 +153,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     In Progress
   </span>
 
-  <span className="text-xs bg-green-200 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-1 rounded-full font-semibold">
+  <span className="text-xs neo-chip px-2 py-1 font-semibold">
     {statusCounts['in-progress']}
   </span>
 </button>
@@ -163,10 +163,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     setSelectedStatus('revision');
     onClose?.();
   }}
-  className={`w-full cursor-pointer text-left px-4 py-3 rounded-lg transition-all duration-200 flex justify-between items-center ${
+  className={`w-full cursor-pointer text-left px-4 py-3 flex justify-between items-center ${
     selectedStatus === 'revision'
-      ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold'
-      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+      ? 'neo-btn-active'
+      : 'neo-btn'
   }`}
 >
   <span className="flex items-center gap-2">
@@ -177,7 +177,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       viewBox="0 0 24 24"
       strokeWidth={2}
       stroke="currentColor"
-      className="w-5 h-5 text-red-600 dark:text-red-400"
+      className="w-5 h-5 text-[#1a91fa]"
     >
       <path
         strokeLinecap="round"
@@ -189,7 +189,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     Revision
   </span>
 
-  <span className="text-xs bg-red-200 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2 py-1 rounded-full font-semibold">
+  <span className="text-xs neo-chip px-2 py-1 font-semibold">
     {statusCounts['revision']}
   </span>
 </button>
@@ -199,10 +199,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     setSelectedStatus('delivered');
     onClose?.();
   }}
-  className={`w-full cursor-pointer text-left px-4 py-3 rounded-lg transition-all duration-200 flex justify-between items-center ${
+  className={`w-full cursor-pointer text-left px-4 py-3 flex justify-between items-center ${
     selectedStatus === 'delivered'
-      ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 font-semibold'
-      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+      ? 'neo-btn-active'
+      : 'neo-btn'
   }`}
 >
   <span className="flex items-center gap-2">
@@ -213,7 +213,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       viewBox="0 0 24 24"
       strokeWidth={2}
       stroke="currentColor"
-      className="w-5 h-5 text-yellow-600 dark:text-yellow-400"
+      className="w-5 h-5 text-[#1a91fa]"
     >
       <path
         strokeLinecap="round"
@@ -225,7 +225,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     Delivered
   </span>
 
-  <span className="text-xs bg-yellow-200 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-2 py-1 rounded-full font-semibold">
+  <span className="text-xs neo-chip px-2 py-1 font-semibold">
     {statusCounts['delivered']}
   </span>
 </button>

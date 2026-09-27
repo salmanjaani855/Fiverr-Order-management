@@ -1,5 +1,5 @@
 /** Display order for seller accounts (names unchanged — sort only). */
-const ACCOUNT_ORDER = ['ena', 'lyric craft', 'sam', 'lyric studio'];
+const ACCOUNT_ORDER = ['ena', 'lyric craft', 'sam', 'lyric studio', 'umer', 'flux studio'];
 
 function normalizeAccountName(name: string) {
   return name.toLowerCase().trim();

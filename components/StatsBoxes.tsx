@@ -21,8 +21,8 @@ export function StatsBoxes() {
   <div className="rounded-xl p-4">
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
-      <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/10 hover:border-white/20 transform hover:-translate-y-1 transition-all duration-300">
-        <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">
+      <div className="neo-card p-6">
+        <p className="text-[#c8d3f1] text-sm font-medium uppercase tracking-wider">
           Total Orders
         </p>
 
@@ -30,13 +30,13 @@ export function StatsBoxes() {
           {stats.totalOrders}
         </p>
 
-        <div className="mt-4 h-1.5 w-full bg-[#222a35] rounded-full overflow-hidden">
-          <div className="h-full w-1/3 bg-[#1dbf73] rounded-full shadow-[0_0_20px_#1dbf73]"></div>
+        <div className="mt-4 h-1.5 w-full rounded-full overflow-hidden" style={{ boxShadow: 'inset 3px 3px 5px #000, inset -5px -5px 5px #3B4451' }}>
+          <div className="h-full w-1/3 bg-[#1a91fa] rounded-full"></div>
         </div>
       </div>
 
-      <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/10 hover:border-white/20 transform hover:-translate-y-1 transition-all duration-300">
-        <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">
+      <div className="neo-card p-6">
+        <p className="text-[#c8d3f1] text-sm font-medium uppercase tracking-wider">
           Revisions
         </p>
 
@@ -44,13 +44,13 @@ export function StatsBoxes() {
           {stats.revisions}
         </p>
 
-        <div className="mt-4 h-1.5 w-full bg-[#222a35] rounded-full overflow-hidden">
-          <div className="h-full w-1/4 bg-[#1dbf73] rounded-full shadow-[0_0_20px_#1dbf73]"></div>
+        <div className="mt-4 h-1.5 w-full rounded-full overflow-hidden" style={{ boxShadow: 'inset 3px 3px 5px #000, inset -5px -5px 5px #3B4451' }}>
+          <div className="h-full w-1/4 bg-[#1a91fa] rounded-full"></div>
         </div>
       </div>
 
-      <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/10 hover:border-white/20 transform hover:-translate-y-1 transition-all duration-300">
-        <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">
+      <div className="neo-card p-6">
+        <p className="text-[#c8d3f1] text-sm font-medium uppercase tracking-wider">
           Total Revenue
         </p>
 
@@ -58,8 +58,8 @@ export function StatsBoxes() {
           ${stats.totalEarnings.toFixed()}
         </p>
 
-        <div className="mt-4 h-1.5 w-full bg-[#222a35] rounded-full overflow-hidden">
-          <div className="h-full w-2/3 bg-[#1dbf73] rounded-full shadow-[0_0_20px_#1dbf73]"></div>
+        <div className="mt-4 h-1.5 w-full rounded-full overflow-hidden" style={{ boxShadow: 'inset 3px 3px 5px #000, inset -5px -5px 5px #3B4451' }}>
+          <div className="h-full w-2/3 bg-[#1a91fa] rounded-full"></div>
         </div>
       </div>
 

@@ -19,10 +19,10 @@ export default function Home() {
   }, [isAuthenticated, loading, router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen neo-app">
       <div className="text-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-        <p className="mt-4 text-gray-600">Loading...</p>
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#3b4451] border-t-[#1a91fa]"></div>
+        <p className="mt-4 text-[#cedbdc]">Loading...</p>
       </div>
     </div>
   );

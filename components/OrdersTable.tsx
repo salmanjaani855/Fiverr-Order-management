@@ -7,9 +7,9 @@ import { FiEdit } from "react-icons/fi";
 import { getAccountId, getRemainingTimeMs, getRemainingTime } from '@/lib/order-utils';
 
 const STATUS_COLORS = {
-  'in-progress': { bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-600' },
-  'revision': { bg: 'bg-red-100', text: 'text-red-700', dot: 'bg-red-600' },
-  'delivered': { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-600' },
+  'in-progress': { bg: 'neo-chip', text: 'text-[#1a91fa]', dot: 'bg-[#1a91fa]' },
+  'revision': { bg: 'neo-chip', text: 'text-[#cedbdc]', dot: 'bg-[#8a88b7]' },
+  'delivered': { bg: 'neo-chip', text: 'text-[#eee]', dot: 'bg-[#144884]' },
 };
 
 const STATUS_LABELS = {
@@ -30,6 +30,16 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
   const [timeRefresh, setTimeRefresh] = useState(0);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<any>({});
+  const [savingRowId, setSavingRowId] = useState<string | null>(null);
+  const [savedRowId, setSavedRowId] = useState<string | null>(null);
+  const [savingDescriptionId, setSavingDescriptionId] = useState<string | null>(null);
+  const [savedDescriptionId, setSavedDescriptionId] = useState<string | null>(null);
+  const [deleteState, setDeleteState] = useState<{
+    id: string;
+    phase: 'pending' | 'exiting';
+  } | null>(null);
+  const [actionError, setActionError] = useState('');
+
   useEffect(() => {
     const timer = setInterval(() => setTimeRefresh((prev) => prev + 1), 30000);
     return () => clearInterval(timer);
@@ -56,15 +66,40 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
     return filtered;
   }, [orders, selectedAccountId, selectedStatus, timeRefresh]);
 
+  const deletingOrder = deleteState
+    ? orders.find((order) => order._id === deleteState.id)
+    : undefined;
+  const displayedOrders = deletingOrder && !filteredOrders.some((order) => order._id === deleteState?.id)
+    ? [...filteredOrders, deletingOrder]
+    : filteredOrders;
+
   const handleEditDescription = async (id: string, description: string) => {
-    await updateOrder(id, { description });
-    setEditingId(null);
+    setActionError('');
+    setSavingDescriptionId(id);
+    try {
+      await updateOrder(id, { description });
+      setEditingId(null);
+      setSavedDescriptionId(id);
+      window.setTimeout(() => setSavedDescriptionId((current) => current === id ? null : current), 1000);
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : 'Failed to save description');
+    } finally {
+      setSavingDescriptionId(null);
+    }
   };
 
   const handleDelete = async (id: string) => {
-    // if (confirm('Are you sure you want to delete this order?')) {
+    setActionError('');
+    setDeleteState({ id, phase: 'pending' });
+    try {
       await deleteOrder(id);
-    // }
+      setDeleteState({ id, phase: 'exiting' });
+      await new Promise((resolve) => window.setTimeout(resolve, 260));
+      setDeleteState(null);
+    } catch (error) {
+      setDeleteState(null);
+      setActionError(error instanceof Error ? error.message : 'Failed to delete order');
+    }
   };
 
   const handleEditRow = (order: any) => {
@@ -80,7 +115,8 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
   const handleSaveRow = async () => {
     if (!editingRowId) return;
 
-    const order = orders.find((o) => o._id === editingRowId);
+    const id = editingRowId;
+    const order = orders.find((o) => o._id === id);
     const timeVal = String(editValues.duration ?? '').trim();
 
     const payload: Record<string, unknown> = {
@@ -109,9 +145,19 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
       }
     }
 
-    await updateOrder(editingRowId, payload);
-    setEditingRowId(null);
-    setEditValues({});
+    setActionError('');
+    setSavingRowId(id);
+    try {
+      await updateOrder(id, payload);
+      setEditingRowId(null);
+      setEditValues({});
+      setSavedRowId(id);
+      window.setTimeout(() => setSavedRowId((current) => current === id ? null : current), 1000);
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : 'Failed to save order');
+    } finally {
+      setSavingRowId(null);
+    }
   };
 
   const handleCancelEdit = () => {
@@ -122,34 +168,40 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
   return (
     <div className="space-y-4">
 
-      {filteredOrders.length === 0 ? (
-        <div className="fiverr-card p-16 text-center">
-          <p className="text-[#8b949e] text-lg font-medium">No Orders Found</p>
+      {actionError && (
+        <div role="alert" className="rounded-lg border border-red-500/40 bg-red-950/30 px-4 py-3 text-sm text-red-300">
+          {actionError}
+        </div>
+      )}
+
+      {displayedOrders.length === 0 ? (
+        <div className="neo-surface p-16 text-center">
+          <p className="text-[#cedbdc] text-lg font-medium">No Orders Found</p>
           {onAddOrder && (
             <button
               type="button"
               onClick={onAddOrder}
-              className="mt-6 inline-flex items-center gap-2 bg-[#2ecc71] hover:bg-[#27ae60] text-[#0a0b0d] font-bold py-2.5 px-5 rounded-xl transition-colors"
+              className="mt-6 inline-flex items-center gap-2 neo-btn py-2.5 px-5 text-[#1a91fa]"
             >
               + Add Order
             </button>
           )}
         </div>
       ) : (
-    <div className="fiverr-card overflow-hidden">
+    <div className="space-y-3">
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-[#0d1117] border-b border-[#21262d]">
+        <table className="w-full border-separate border-spacing-y-3">
+          <thead>
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Client</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Price</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#8b949e] uppercase tracking-wider">Remaining Time</th>
-              <th className="px-6 py-4 text-right text-xs font-bold text-[#8b949e] uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-2 text-left text-xs font-bold text-[#8a88b7] uppercase tracking-wider">Client</th>
+              <th className="px-6 py-2 text-left text-xs font-bold text-[#8a88b7] uppercase tracking-wider">Price</th>
+              <th className="px-6 py-2 text-left text-xs font-bold text-[#8a88b7] uppercase tracking-wider">Status</th>
+              <th className="px-6 py-2 text-left text-xs font-bold text-[#8a88b7] uppercase tracking-wider">Remaining Time</th>
+              <th className="px-6 py-2 text-right text-xs font-bold text-[#8a88b7] uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#21262d]">
-            {filteredOrders.map((order) => {
+          <tbody>
+            {displayedOrders.map((order) => {
               const colors = STATUS_COLORS[order.status];
               const remaining = getRemainingTime(
                 order.createdAt,
@@ -161,14 +213,22 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
 
               return (
                 <React.Fragment key={order._id}>
-                  <tr className={`${isEditing ? 'bg-[#21262d]/50' : 'hover:bg-[#1c2128]'} transition-colors duration-200`}>
+                  <tr className={`neo-row ${
+                    deleteState?.id === order._id
+                      ? deleteState.phase === 'exiting'
+                        ? 'animate-order-delete'
+                        : ''
+                      : savedRowId === order._id
+                        ? 'animate-order-saved'
+                        : ''
+                  }`}>
                     <td className="px-6 py-4 text-sm">
                       {isEditing ? (
                         <input
                           type="text"
                           value={editValues.clientName}
                           onChange={(e) => setEditValues({ ...editValues, clientName: e.target.value })}
-                          className="w-full px-3 py-2 border-2 border-blue-400 dark:border-blue-600 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 neo-field"
                         />
                       ) : (
                         <span className="text-white font-semibold">{order.clientName}</span>
@@ -180,10 +240,10 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                           type="number"
                           value={editValues.price}
                           onChange={(e) => setEditValues({ ...editValues, price: parseFloat(e.target.value) })}
-                          className="w-full px-3 py-2 border-2 border-blue-400 dark:border-blue-600 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 neo-field"
                         />
                       ) : (
-                        <span className="text-[#2ecc71] font-bold">${order.price.toFixed()}</span>
+                        <span className="text-[#1a91fa] font-bold">${order.price.toFixed()}</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
@@ -191,7 +251,7 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                         <select
                           value={editValues.status}
                           onChange={(e) => setEditValues({ ...editValues, status: e.target.value })}
-                          className="w-full px-3 py-2 border-2 border-blue-400 dark:border-blue-600 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 neo-field"
                         >
                           <option value="in-progress">In Progress</option>
                           <option value="revision">Revision</option>
@@ -210,7 +270,7 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                           type="text"
                           value={editValues.duration}
                           onChange={(e) => setEditValues({ ...editValues, duration: e.target.value })}
-                          className="w-full px-3 py-2 border-2 border-blue-400 dark:border-blue-600 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 neo-field"
                           placeholder="Hours or -"
                         />
                       ) : order.isPaused ? (
@@ -237,9 +297,18 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                         <div className="space-x-2">
                           <button
                             onClick={handleSaveRow}
-                            className="px-3 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg text-xs font-semibold transition-all duration-200"
+                            disabled={savingRowId === order._id}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:cursor-wait disabled:opacity-80 text-white rounded-lg text-xs font-semibold transition-all duration-200"
                           >
-                            ✓ Save
+                            {savingRowId === order._id ? (
+                              <>
+                                <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
+                                Saving...
+                              </>
+                            ) : savedRowId === order._id ? '✓ Saved' : '✓ Save'}
                           </button>
                           <button
                             onClick={handleCancelEdit}
@@ -273,12 +342,20 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                           </button>
                           <button
                             onClick={() => handleDelete(order._id)}
-                            className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-semibold transition-colors duration-200 inline-flex items-center gap-1"
-                            title="Delete order"
+                            disabled={deleteState?.id === order._id}
+                            className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 disabled:cursor-wait disabled:opacity-80 font-semibold transition-colors duration-200 inline-flex items-center gap-1"
+                            title={deleteState?.id === order._id ? 'Deleting order' : 'Delete order'}
                           >
-                            <svg className="w-4 h-4 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
+                            {deleteState?.id === order._id && deleteState.phase === 'pending' ? (
+                              <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-label="Deleting">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                              </svg>
+                            ) : (
+                              <svg className="w-4 h-4 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                              </svg>
+                            )}
                           </button>
                         </div>
                       )}
@@ -301,9 +378,18 @@ export function OrdersTable({ onAddOrder }: OrdersTableProps) {
                               <div className="flex gap-3">
                                 <button
                                   onClick={() => handleEditDescription(order._id, editDescription)}
-                                  className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105"
+                                  disabled={savingDescriptionId === order._id}
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:cursor-wait disabled:opacity-80 text-white rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105"
                                 >
-                                  ✓ Save
+                                  {savingDescriptionId === order._id ? (
+                                    <>
+                                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                      </svg>
+                                      Saving...
+                                    </>
+                                  ) : savedDescriptionId === order._id ? '✓ Saved' : '✓ Save'}
                                 </button>
                                 <button
                                   onClick={() => setEditingId(null)}
