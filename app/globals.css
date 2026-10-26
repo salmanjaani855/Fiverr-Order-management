@@ -134,6 +134,36 @@ body {
   color: #f2f5f8;
 }
 
+.neo-card-3d-wrap {
+  perspective: 900px;
+}
+
+.neo-card-3d {
+  transform-style: preserve-3d;
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms ease;
+  will-change: transform;
+}
+
+.neo-card-3d > * {
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.neo-card-3d:hover {
+  transform: translateY(-10px) translateZ(40px) rotateX(6deg) scale(1.04);
+  box-shadow: 22px 28px 50px 0px rgba(16, 16, 18, 0.85), -7px -7px 30px 0px #262e32;
+}
+
+.neo-card-3d:hover > * {
+  transform: translateZ(30px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-card-3d,
+  .neo-card-3d > * {
+    transition: none;
+  }
+}
+
 .neo-row {
   background: var(--neo-bg);
   border-radius: 40px;

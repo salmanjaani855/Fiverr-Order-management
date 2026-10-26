@@ -93,22 +93,24 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
   const hours = durationHours % 24;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-2 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="fiverr-card my-auto max-h-[calc(100dvh-1rem)] w-full max-w-2xl overflow-y-auto p-4 border-[#2ecc71]/20 shadow-[0_0_40px_rgba(46,204,113,0.08)] sm:max-h-[calc(100dvh-2rem)] sm:p-6 md:p-8">
-        <h2 className="text-2xl font-bold text-white mb-8">Add New Order</h2>
+    <div className="animate-fade-in fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-2 backdrop-blur-sm sm:items-center sm:p-4">
+      <div className="animate-pop-in neo-modal my-auto max-h-[calc(100dvh-1rem)] w-full max-w-2xl overflow-y-auto p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-6 md:p-8">
+        <h2 className="text-2xl font-bold text-[#eee] mb-8">
+          Add New <span className="text-[#1a91fa]">Order</span>
+        </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="order-form-stagger space-y-6">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-600 text-red-700 dark:text-red-400 px-4 py-4 rounded-lg text-sm font-medium animate-in">
+            <div className="neo-field px-4 py-4 text-sm font-medium !text-red-300 animate-in">
               ⚠️ {error}
             </div>
           )}
 
           {/* Account Selection */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Select Account</label>
+            <label className="block text-sm font-semibold text-[#cedbdc] mb-3">Select Account</label>
             {accounts.length === 0 ? (
-              <div className="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-center">
+              <div className="neo-field w-full px-4 py-3 !text-[#cedbdc] text-center">
                 No accounts available
               </div>
             ) : (
@@ -116,7 +118,7 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
                 name="accountId"
                 value={formData.accountId}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30 outline-none cursor-pointer hover:border-green-400 transition-all duration-200 font-medium"
+                className="neo-field w-full px-4 py-3 placeholder:text-gray-500 transition-shadow duration-200 cursor-pointer font-medium"
                 required
               >
                 <option value="">-- Select an Account --</option>
@@ -131,13 +133,13 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
 
           {/* Client Name */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Client Name</label>
+            <label className="block text-sm font-semibold text-[#cedbdc] mb-3">Client Name</label>
             <input
               type="text"
               name="clientName"
               value={formData.clientName}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30 outline-none placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-200"
+              className="neo-field w-full px-4 py-3 placeholder:text-gray-500 transition-shadow duration-200"
               placeholder="John Doe"
               required
             />
@@ -145,19 +147,19 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
 
           {/* Deadline */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Deadline (Date & Time)</label>
+            <label className="block text-sm font-semibold text-[#cedbdc] mb-3">Deadline (Date & Time)</label>
             <input
               type="datetime-local"
               name="deadline"
               value={formData.deadline}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30 outline-none transition-all duration-200 cursor-pointer"
+              className="neo-field w-full px-4 py-3 placeholder:text-gray-500 transition-shadow duration-200 cursor-pointer [color-scheme:dark]"
               required
             />
             {formData.deadline && (
-              <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                <p className="text-xs font-medium text-green-700 dark:text-green-400 mb-2">📊 Duration Preview:</p>
-                <p className="text-sm font-bold text-green-900 dark:text-green-300">
+              <div className="neo-surface mt-4 p-3">
+                <p className="text-xs font-medium text-[#cedbdc] mb-2">📊 Duration Preview:</p>
+                <p className="text-sm font-bold text-[#1a91fa]">
                   {days > 0 ? `${days}d ${hours}h` : `${hours}h`}
                 </p>
               </div>
@@ -166,14 +168,14 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
 
           {/* Price */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Price ($)</label>
+            <label className="block text-sm font-semibold text-[#cedbdc] mb-3">Price ($)</label>
             <input
               type="number"
               step="1"
               name="price"
               value={formData.price}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30 outline-none placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-200"
+              className="neo-field w-full px-4 py-3 placeholder:text-gray-500 transition-shadow duration-200"
               placeholder="100"
               required
             />
@@ -181,12 +183,12 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
 
           {/* Status */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Status</label>
+            <label className="block text-sm font-semibold text-[#cedbdc] mb-3">Status</label>
             <select
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30 outline-none cursor-pointer hover:border-green-400 transition-all duration-200"
+              className="neo-field w-full px-4 py-3 placeholder:text-gray-500 transition-shadow duration-200 cursor-pointer"
             >
               <option value="in-progress">In Progress</option>
               <option value="revision">Revision</option>
@@ -196,30 +198,30 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Description</label>
+            <label className="block text-sm font-semibold text-[#cedbdc] mb-3">Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30 outline-none resize-none placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-200"
+              className="neo-field w-full px-4 py-3 placeholder:text-gray-500 transition-shadow duration-200 resize-none"
               rows={3}
               placeholder="Order details..."
             />
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-4 pt-6 border-t border-[#3b4451]">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
+              className="neo-btn flex-1 px-4 py-3 cursor-pointer active:shadow-[var(--neo-concave)]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg"
+              className="neo-btn flex-1 px-4 py-3 cursor-pointer !text-[#1a91fa] hover:!text-white active:shadow-[var(--neo-concave)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? '⏳ Adding...' : '✓ Add Order'}
             </button>
@@ -242,8 +244,53 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
             transform: scale(1);
           }
         }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes popIn {
+          0% {
+            opacity: 0;
+            transform: translateY(24px) scale(0.92);
+          }
+          60% {
+            opacity: 1;
+            transform: translateY(-4px) scale(1.01);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        @keyframes fieldUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in { animation: fadeIn 0.25s ease-out; }
         .animate-scale-in { animation: scaleIn 0.3s ease-out; }
+        .animate-pop-in { animation: popIn 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+        .order-form-stagger > * {
+          opacity: 0;
+          animation: fieldUp 0.35s ease-out forwards;
+        }
+        .order-form-stagger > *:nth-child(1) { animation-delay: 0.12s; }
+        .order-form-stagger > *:nth-child(2) { animation-delay: 0.17s; }
+        .order-form-stagger > *:nth-child(3) { animation-delay: 0.22s; }
+        .order-form-stagger > *:nth-child(4) { animation-delay: 0.27s; }
+        .order-form-stagger > *:nth-child(5) { animation-delay: 0.32s; }
+        .order-form-stagger > *:nth-child(6) { animation-delay: 0.37s; }
+        .order-form-stagger > *:nth-child(7) { animation-delay: 0.42s; }
+        .order-form-stagger > *:nth-child(8) { animation-delay: 0.47s; }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-fade-in,
+          .animate-pop-in,
+          .order-form-stagger > * {
+            animation-duration: 1ms;
+            animation-delay: 0s;
+          }
+        }
       `}</style>
     </div>
   );

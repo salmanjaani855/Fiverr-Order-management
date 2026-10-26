@@ -24,16 +24,16 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-40 px-3 pt-3 pb-2">
+    <nav className="relative z-40 px-3 pt-3 pb-2">
       <div className="neo-nav max-w-full px-4 md:px-6 py-3.5 flex items-center justify-between gap-3">
         <Link
           href="/dashboard"
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
           <div className="flex items-center gap-3">
-            <div className="neo-logo flex h-10 w-[72px] items-center justify-center text-sm font-bold">
+            {/* <div className="neo-logo flex h-10 w-[72px] items-center justify-center text-sm font-bold">
               FH.
-            </div>
+            </div> */}
             <h1 className="text-2xl font-bold text-[#eee] hidden sm:block">
               Fiverr <span className="text-[#1a91fa]">Orders</span>
             </h1>

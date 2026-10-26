@@ -43,7 +43,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Sidebar */}
 <div
-  className={`fixed md:static inset-y-0 left-0 w-64 neo-sidebar h-[100dvh] overflow-y-auto transition-all duration-300 ease-in-out z-40 ${
+  className={`fixed md:static inset-y-0 left-0 w-64 neo-sidebar h-[100dvh] md:h-auto overflow-y-auto md:overflow-visible transition-all duration-300 ease-in-out z-40 ${
     isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
   }`}
 >

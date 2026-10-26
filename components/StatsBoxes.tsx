@@ -19,9 +19,9 @@ export function StatsBoxes() {
 
 <div className="mb-8">
   <div className="rounded-xl p-4">
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 neo-card-3d-wrap">
 
-      <div className="neo-card p-6">
+      <div className="neo-card neo-card-3d p-6">
         <p className="text-[#c8d3f1] text-sm font-medium uppercase tracking-wider">
           Total Orders
         </p>
@@ -35,7 +35,7 @@ export function StatsBoxes() {
         </div>
       </div>
 
-      <div className="neo-card p-6">
+      <div className="neo-card neo-card-3d p-6">
         <p className="text-[#c8d3f1] text-sm font-medium uppercase tracking-wider">
           Revisions
         </p>
@@ -49,7 +49,7 @@ export function StatsBoxes() {
         </div>
       </div>
 
-      <div className="neo-card p-6">
+      <div className="neo-card neo-card-3d p-6">
         <p className="text-[#c8d3f1] text-sm font-medium uppercase tracking-wider">
           Total Revenue
         </p>
